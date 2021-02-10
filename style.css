@@ -1,4 +1,15 @@
+body{
+  background: rgb(127, 31, 95);
+
+}
 .card{
   width: 250px; 
   margin: 10px;
 }
+
+.jumbotron{
+  background: url(./images/background.jpg) center;
+  background-size: cover;
+  height: 400px;
+}
+
