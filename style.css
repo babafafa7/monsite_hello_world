@@ -1,6 +1,7 @@
 
 .card{ 
-  width: 250px; 
+  width: 250px;
+  height: 350px;
   margin: 10px;
 }
 
@@ -15,6 +16,7 @@
 .card-img-top{
   opacity: 100%;
 }
+
 
 .jumbotron{
   background: url(./images/background.jpg) center;
