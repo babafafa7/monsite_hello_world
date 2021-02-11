@@ -1,26 +1,62 @@
 
-.card{ 
-  width: 250px;
-  height: 350px;
+.card-flip {
+  perspective: 1000px;
   margin: 10px;
+  width: 286px;
+  height: 350px;
+}
+
+.card-flip:hover .flip,
+.card-flip.hover .flip {
+  transform: rotateY(180deg);
+}
+
+.flip {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card{
+  width: 286px;
+  height: 350px;
+  border-color: black;
+}
+
+.front,
+.back {
+  backface-visibility: hidden;
+  position: absolute;
+}
+
+.front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
 }
 
 .card-body{
   background: url(./images/background3.jpg);
   opacity: 85%;
 }
+
 .card-title, .card-text{
   color: white;
 }
 
-.card-img-top{
-  opacity: 100%;
-}
-
-
-.jumbotron{
-  background: url(./images/background.jpg) center;
+body{
+  background-color: rgb(63, 24, 99);
+  background-image: url(./images/background4.jpg);
   background-size: cover;
-  height: 400px;
+  background-position: center;
+  background-repeat: no-repeat;
+ 
 }
 
+.container-fluid{
+  padding-top: 20%;
+  padding-bottom: 5%;
+}
