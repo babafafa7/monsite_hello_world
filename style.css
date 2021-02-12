@@ -20,7 +20,7 @@
 .card{
   width: 286px;
   height: 350px;
-  border-color: black;
+  border: none;
 }
 
 .front,
@@ -53,6 +53,7 @@ body{
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed;
  
 }
 
