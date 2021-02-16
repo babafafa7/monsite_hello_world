@@ -6,6 +6,7 @@
     var ctx;
     var delay = 250;
     var grille = new Array(largeurGrille);
+    var formeSuivante;
 	
 	// Position de la forme sur la grille
 	const XInitial = 5;
@@ -180,14 +181,14 @@
         }
     }
 
-    function drawForme() {
-		for(x=0 ; x<forme[numForme][rotation].length ; x++) {
-			for(y=0 ; y<forme[numForme][rotation].length ; y++) {
-                if(forme[numForme][rotation][y][x] == 1) {
-                    ctx.fillStyle = couleursFormes[1][numForme];
-                    ctx.fillRect((formX + x) * carreau, (formY + y) * carreau, carreau, carreau);
-                    ctx.fillStyle = couleursFormes[0][numForme];
-                    ctx.fillRect((formX + x) * carreau + 1, (formY + y) * carreau + 1, carreau - 2, carreau - 2);
+    function drawForme(num, i,j,z) {
+		for(x=0 ; x<forme[num][z][0].length ; x++) {
+			for(y=0 ; y<forme[num][z][0].length ; y++) {
+                if(forme[num][z][y][x] == 1) {
+                    ctx.fillStyle = couleursFormes[1][num];
+                    ctx.fillRect((i + x) * carreau, (j + y) * carreau, carreau, carreau);
+                    ctx.fillStyle = couleursFormes[0][num];
+                    ctx.fillRect((i + x) * carreau + 1, (j + y) * carreau + 1, carreau - 2, carreau - 2);
                 }
             }
         }
@@ -198,11 +199,17 @@
 	//  - dessine la forme
     function refreshCanvas() {
 		ctx.save();								   
-        
 		ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
         formY++;
-        if(collision()){transfertFormeToGrille(); formY = 0;}
-		drawForme();
+        if(collision()){
+            transfertFormeToGrille(); 
+            numForme = formeSuivante;
+            formeSuivante = nouvelleForme();
+            formY = 0;
+            formX = 5;
+        }
+		drawForme(numForme, formX, formY, rotation);
+        drawForme(formeSuivante, 330, 40,0);
         drawGrille();
         ctx.restore();
         setTimeout(refreshCanvas,delay);
@@ -211,11 +218,19 @@
 	// Initialisation du canvas
     function init() {
         canvas = document.createElement('canvas');
-        canvas.width = largeurGrille * carreau;
+        canvas.width = largeurGrille * carreau + 150;
         canvas.height = hauteurGrille * carreau;
-        canvas.style.border = "1px solid";
+        canvas.style.border = "2px solid";
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
+        ctx.font = '15px serif';
+        ctx.fillText('Prochaine forme :', 310, 30 );
+        ctx.beginPath();
+        ctx.moveTo(largeurGrille*carreau,0);
+        ctx.lineTo(largeurGrille*carreau, hauteurGrille*carreau);
+        ctx.stroke();
+        numForme = nouvelleForme();
+        formeSuivante = nouvelleForme();
         initGrille();
 		refreshCanvas();
     }
@@ -257,6 +272,12 @@
                 }
             }
         }
+    }
+
+    function nouvelleForme(){
+        num = Math.floor(Math.random() * 7);
+        console.log(num);
+       return num;
     }
 
 	// Seul ligne de code... avec la gestion des évènements clavier
