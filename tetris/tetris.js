@@ -181,10 +181,11 @@
         }
     }
 
-    function drawForme(num, i,j,z) {
-		for(x=0 ; x<forme[num][z][0].length ; x++) {
-			for(y=0 ; y<forme[num][z][0].length ; y++) {
-                if(forme[num][z][y][x] == 1) {
+    function drawForme(num, i, j, z) {
+        console.log(num + "/"+ i + "/"+j + "/"+z);
+		for(let x=0 ; x<forme[num][z][0].length ; x++) {
+			for(let y=0 ; y<forme[num][z][0].length ; y++) {
+                if(forme[num][z][y][x] === 1) {
                     ctx.fillStyle = couleursFormes[1][num];
                     ctx.fillRect((i + x) * carreau, (j + y) * carreau, carreau, carreau);
                     ctx.fillStyle = couleursFormes[0][num];
@@ -202,14 +203,17 @@
 		ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
         formY++;
         if(collision()){
+            formY--;
             transfertFormeToGrille(); 
             numForme = formeSuivante;
             formeSuivante = nouvelleForme();
+            ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 150);
+            drawForme(formeSuivante, 16, 3,0);
             formY = 0;
             formX = 5;
+            rotation = 0;
         }
 		drawForme(numForme, formX, formY, rotation);
-        drawForme(formeSuivante, 330, 40,0);
         drawGrille();
         ctx.restore();
         setTimeout(refreshCanvas,delay);
@@ -231,6 +235,7 @@
         ctx.stroke();
         numForme = nouvelleForme();
         formeSuivante = nouvelleForme();
+        drawForme(formeSuivante, 16, 3,0);
         initGrille();
 		refreshCanvas();
     }
@@ -255,7 +260,7 @@
         for(x=0 ; x<forme[numForme][rotation].length ; x++) {
 			for(y=0 ; y<forme[numForme][rotation].length ; y++) {
                 if(forme[numForme][rotation][y][x] == 1) {
-                    grille[formX+x][formY+y-1] = numForme;
+                    grille[formX+x][formY+y] = numForme;
                 }
             }
         }
@@ -275,9 +280,7 @@
     }
 
     function nouvelleForme(){
-        num = Math.floor(Math.random() * 7);
-        console.log(num);
-       return num;
+       return Math.floor(Math.random() * 7);
     }
 
 	// Seul ligne de code... avec la gestion des évènements clavier
