@@ -7,6 +7,7 @@
     var delay = 250;
     var grille = new Array(largeurGrille);
     var formeSuivante;
+    var ctrLignes = 0;
 	
 	// Position de la forme sur la grille
 	const XInitial = 5;
@@ -182,7 +183,6 @@
     }
 
     function drawForme(num, i, j, z) {
-        console.log(num + "/"+ i + "/"+j + "/"+z);
 		for(let x=0 ; x<forme[num][z][0].length ; x++) {
 			for(let y=0 ; y<forme[num][z][0].length ; y++) {
                 if(forme[num][z][y][x] === 1) {
@@ -201,20 +201,25 @@
     function refreshCanvas() {
 		ctx.save();								   
 		ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
+        drawForme(numForme, formX, formY, rotation);
+        drawGrille();
         formY++;
         if(collision()){
             formY--;
-            transfertFormeToGrille(); 
+            transfertFormeToGrille();
+            verifierLignes(); 
+            ctx.clearRect(largeurGrille * carreau + 5, 11 * carreau, 150, 100);
+            ctx.fillStyle= 'black';
+            ctx.font = '15px serif';
+            ctx.fillText(ctrLignes, 350, 250);
             numForme = formeSuivante;
             formeSuivante = nouvelleForme();
-            ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 150);
+            ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 100);
             drawForme(formeSuivante, 16, 3,0);
             formY = 0;
             formX = 5;
             rotation = 0;
         }
-		drawForme(numForme, formX, formY, rotation);
-        drawGrille();
         ctx.restore();
         setTimeout(refreshCanvas,delay);
     }
@@ -229,6 +234,8 @@
         ctx = canvas.getContext('2d');
         ctx.font = '15px serif';
         ctx.fillText('Prochaine forme :', 310, 30 );
+        ctx.fillText('Lignes :', 310, 200);
+        ctx.fillText(ctrLignes, 350, 250);
         ctx.beginPath();
         ctx.moveTo(largeurGrille*carreau,0);
         ctx.lineTo(largeurGrille*carreau, hauteurGrille*carreau);
@@ -281,6 +288,38 @@
 
     function nouvelleForme(){
        return Math.floor(Math.random() * 7);
+    }
+
+    function verifierLignes(){
+        let a;
+        let y = formY;
+
+        for(let b = 0; b < forme[numForme][0].length; b++){
+            a = true;
+            for(let x = 0; x < grille.length; x++){
+                if(grille[x][y] === -1){
+                    a = false;
+                    break;
+                }
+            }
+            if(a){
+                effaceLigne(y);
+                ctrLignes++;
+            }
+            y++;
+            if(y >= grille[0].length){
+                break;
+            }
+        }
+    }
+
+    function effaceLigne(numLigne){
+        for(;numLigne > 0; numLigne--){
+            for(let x=0; x < grille.length; x++){    
+                grille[x][numLigne] = grille[x][numLigne-1];
+            }
+        }
+        grille[x][numLigne] = -1;
     }
 
 	// Seul ligne de code... avec la gestion des évènements clavier
