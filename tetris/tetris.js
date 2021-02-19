@@ -383,7 +383,6 @@
     document.onkeydown = function handleKeyDown(e) {
         var key = e.keyCode;
         switch(key) {
-            // Remarque : Pour connaitre les keycodes : https://keycode.info/
             case 38:  // flèche haut => rotation horaire de la forme
                 temp = rotation
                 rotation++;
@@ -391,32 +390,26 @@
                 if(collision()) rotation = temp;
                 break;
 
-            case 40: // flèche haut => rotation anti-horaire de la forme
-                temp = rotation
-                rotation--;
-                if(rotation < 0){rotation = forme[numForme].length-1}
-                if(collision()) rotation = temp;
+            case 40: // flèche bas => descend immédiatement la pièce au plus bas
+                while(!collision()){
+                    formY++;
+                }
+                formY--;
                 break;
             
-            case 39:
+            case 39: //flèche droite => déplacer pièce à droite
                 temp = formX;
                 formX++;
                 if(collision()) {formX = temp;}
                 break;
 
-            case 37:
+            case 37: //flèche gauche => déplacer pièce à gauche
                 temp = formX
                 formX--;
                 if(collision()) {formX = temp;}
                 break;
-            
-            case 84: //t => changement de forme
-                numForme++;
-                rotation = 0; 
-                if(numForme > forme.length-1){numForme = 0;}                
-                break;
 
-            case 80:
+            case 80: //p => met en pause le jeu ou le reprend
                 if(timer_is_on){
                     timer_is_on = false;
                 }
@@ -424,7 +417,7 @@
                     timer_is_on = true;
                     refreshCanvas();
                 }
-            break;
+                break;
         }
     }    
 }
