@@ -4,10 +4,11 @@
     const carreau = 20;	// Taille en pixels d'une case de la grille
     var canvas;
     var ctx;
-    var delay = 250;
+    var delay;
+    var timer_is_on;
     var grille = new Array(largeurGrille);
     var formeSuivante;
-    var ctrLignes = 0;
+    var ctrLignes;
 	
 	// Position de la forme sur la grille
 	const XInitial = 5;
@@ -199,33 +200,45 @@
 	//  - efface le canvas
 	//  - dessine la forme
     function refreshCanvas() {
+        vitesse();
 		ctx.save();								   
 		ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
         drawForme(numForme, formX, formY, rotation);
         drawGrille();
         formY++;
         if(collision()){
-            formY--;
-            transfertFormeToGrille();
-            verifierLignes(); 
-            ctx.clearRect(largeurGrille * carreau + 5, 11 * carreau, 150, 100);
-            ctx.fillStyle= 'black';
-            ctx.font = '15px serif';
-            ctx.fillText(ctrLignes, 350, 250);
-            numForme = formeSuivante;
-            formeSuivante = nouvelleForme();
-            ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 100);
-            drawForme(formeSuivante, 16, 3,0);
-            formY = 0;
-            formX = 5;
-            rotation = 0;
+            if(formY < 2){
+                gameOver();
+            }
+            else{
+                formY--;
+                transfertFormeToGrille();
+                verifierLignes(); 
+                ctx.clearRect(largeurGrille * carreau + 5, 11 * carreau, 150, 100);
+                ctx.fillStyle= 'black';
+                ctx.font = '15px serif';
+                ctx.fillText(ctrLignes, 350, 250);
+                numForme = formeSuivante;
+                formeSuivante = nouvelleForme();
+                ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 100);
+                drawForme(formeSuivante, 16, 3,0);
+                formY = 0;
+                formX = 5;
+                rotation = 0;
+            }
+            
         }
         ctx.restore();
-        setTimeout(refreshCanvas,delay);
+        if(timer_is_on){
+            setTimeout(refreshCanvas,delay);
+        }
     }
 
 	// Initialisation du canvas
     function init() {
+        ctrLignes = 0;
+        timer_is_on = true;
+        initGrille();
         canvas = document.createElement('canvas');
         canvas.width = largeurGrille * carreau + 150;
         canvas.height = hauteurGrille * carreau;
@@ -243,7 +256,6 @@
         numForme = nouvelleForme();
         formeSuivante = nouvelleForme();
         drawForme(formeSuivante, 16, 3,0);
-        initGrille();
 		refreshCanvas();
     }
 
@@ -251,7 +263,7 @@
         for(x=0 ; x<forme[numForme][rotation].length ; x++) {
 			for(y=0 ; y<forme[numForme][rotation].length ; y++) {
                 if(forme[numForme][rotation][y][x] == 1){
-                    if(((formX + x == largeurGrille) || (formX + x == -1)) || (formY + y == hauteurGrille)){
+                    if(((formX + x >= largeurGrille) || (formX + x <= -1)) || (formY + y >= hauteurGrille)){
                         return true;
                     }
                     if(grille[formX+x][formY+y] > -1){
@@ -322,6 +334,48 @@
         grille[x][numLigne] = -1;
     }
 
+    function vitesse(){
+        if(ctrLignes < 5){
+            delay = 200;
+        }
+        else if(ctrLignes >= 5 ){
+            delay = 180;
+        }
+        else if(ctrLignes >= 10){
+            delay = 160;   
+        }
+        else if(ctrLignes >= 20){
+            delay = 140;   
+        }
+    }
+
+    function gameOver(){
+        ctrLignes = 0;
+        timer_is_on = false;
+        ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
+        for( let x = 0; x < grille[0].length; x++){
+            effaceLigne(x);
+        }
+        
+        ctx.clearRect(largeurGrille * carreau + 5, 11 * carreau, 150, 100);
+        ctx.fillStyle= 'black';
+        ctx.font = '15px serif';
+        ctx.fillText(ctrLignes, 350, 250);
+        
+        ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 100);
+        numForme = formeSuivante;
+        formeSuivante = nouvelleForme();
+        
+        drawForme(formeSuivante, 16, 3,0);
+        formY = 0;
+        formX = 5;
+        rotation = 0;								   
+        
+        ctx.fillStyle= 'black';
+        ctx.font = '15px sans-serif';
+        ctx.fillText("Appuyer sur p pour recommencer", 20, 280);
+    }
+
 	// Seul ligne de code... avec la gestion des évènements clavier
     init();
 
@@ -361,6 +415,16 @@
                 rotation = 0; 
                 if(numForme > forme.length-1){numForme = 0;}                
                 break;
+
+            case 80:
+                if(timer_is_on){
+                    timer_is_on = false;
+                }
+                else{
+                    timer_is_on = true;
+                    refreshCanvas();
+                }
+            break;
         }
     }    
 }
