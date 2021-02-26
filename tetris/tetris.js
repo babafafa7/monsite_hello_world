@@ -214,13 +214,13 @@
                 formY--;
                 transfertFormeToGrille();
                 verifierLignes(); 
-                ctx.clearRect(largeurGrille * carreau + 5, 11 * carreau, 150, 100);
+                ctx.clearRect(largeurGrille * carreau + 15, 11 * carreau, 150, 100);
                 ctx.fillStyle= 'black';
                 ctx.font = '15px serif';
                 ctx.fillText(ctrLignes, 350, 250);
                 numForme = formeSuivante;
                 formeSuivante = nouvelleForme();
-                ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 100);
+                ctx.clearRect(largeurGrille * carreau + 15, 2 * carreau, 150, 100);
                 drawForme(formeSuivante, 16, 3,0);
                 formY = 0;
                 formX = 5;
@@ -240,18 +240,22 @@
         timer_is_on = true;
         initGrille();
         canvas = document.createElement('canvas');
+        canvas.id = "jeu";
         canvas.width = largeurGrille * carreau + 150;
         canvas.height = hauteurGrille * carreau;
-        canvas.style.border = "2px solid";
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         ctx.font = '15px serif';
         ctx.fillText('Prochaine forme :', 310, 30 );
         ctx.fillText('Lignes :', 310, 200);
         ctx.fillText(ctrLignes, 350, 250);
+        
+        
         ctx.beginPath();
+        ctx.lineWidth = 15;
         ctx.moveTo(largeurGrille*carreau,0);
         ctx.lineTo(largeurGrille*carreau, hauteurGrille*carreau);
+        ctx.strokeStyle = 'rgb(255, 14, 243)';
         ctx.stroke();
         numForme = nouvelleForme();
         formeSuivante = nouvelleForme();
@@ -338,42 +342,48 @@
         if(ctrLignes < 5){
             delay = 200;
         }
-        else if(ctrLignes >= 5 ){
+        else if((ctrLignes >= 5) && (ctrLignes < 10)){
             delay = 180;
         }
-        else if(ctrLignes >= 10){
+        else if((ctrLignes >= 10) &&(ctrLignes < 20)){
             delay = 160;   
         }
-        else if(ctrLignes >= 20){
+        else if((ctrLignes >= 20) && (ctrLignes < 30)){
             delay = 140;   
+        }
+        else if((ctrLignes >= 30) && (ctrLignes < 50)){
+            delay = 120;   
+        }
+        else{
+            delay = 100;
         }
     }
 
     function gameOver(){
         ctrLignes = 0;
         timer_is_on = false;
-        ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
+        /*ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
         for( let x = 0; x < grille[0].length; x++){
             effaceLigne(x);
         }
         
-        ctx.clearRect(largeurGrille * carreau + 5, 11 * carreau, 150, 100);
+        ctx.clearRect(largeurGrille * carreau + 15, 11 * carreau, 150, 100);
         ctx.fillStyle= 'black';
         ctx.font = '15px serif';
         ctx.fillText(ctrLignes, 350, 250);
         
-        ctx.clearRect(largeurGrille * carreau + 5, 2 * carreau, 150, 100);
+        ctx.clearRect(largeurGrille * carreau + 15, 2 * carreau, 150, 100);
         numForme = formeSuivante;
         formeSuivante = nouvelleForme();
         
         drawForme(formeSuivante, 16, 3,0);
         formY = 0;
         formX = 5;
-        rotation = 0;								   
+        rotation = 0;*/								   
         
         ctx.fillStyle= 'black';
         ctx.font = '15px sans-serif';
-        ctx.fillText("Appuyer sur p pour recommencer", 20, 280);
+        ctx.fillText("Appuyer sur r pour recommencer", 20, 280);
     }
 
 	// Seul ligne de code... avec la gestion des évènements clavier
@@ -418,6 +428,11 @@
                     refreshCanvas();
                 }
                 break;
+            case 82:
+                let c = document.getElementsByTagName("canvas");
+                c.remove();
+                init();
+            break;
         }
     }    
 }
