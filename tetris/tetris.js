@@ -9,6 +9,9 @@
     var grille = new Array(largeurGrille);
     var formeSuivante;
     var ctrLignes;
+    var myAudio = document.createElement("audio");
+    myAudio.src = "tetris-gameboy-02.mp3";
+    myAudio.loop = true;
 	
 	// Position de la forme sur la grille
 	const XInitial = 5;
@@ -22,7 +25,7 @@
     var rotation = 0;
     
     var couleursFormes = [
-        ["#FF69B4","#FF8C00","#228B22","#4B0082","#DC143C","#FFD700","#00BFFF"],
+        ["#0000FF","#00FF00","#FF0000","#8A2BE2","#FF4500","#FFFF00","#00FFFF"],
         ["#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
     ]
 
@@ -242,7 +245,7 @@
 	// Initialisation du canvas
     function init() {
         ctrLignes = 0;
-        timer_is_on = true;
+        timer_is_on = false;
         initGrille();
         canvas = document.createElement('canvas');
         canvas.width = largeurGrille * carreau + 150;
@@ -386,7 +389,8 @@
 
     function gameOver(){
         ctrLignes = 0;
-        timer_is_on = false;							   
+        timer_is_on = false;
+        myAudio.pause();						   
         ctx.fillStyle= 'rgb(255, 14, 243)';
         ctx.font = 'bold 40px sans-serif';
         ctx.fillText("RETRY => R", 20, 280);
@@ -431,16 +435,19 @@
                 if(collision()) {formX = temp;}
                 break;
 
-            case 80: //p => met en pause le jeu ou le reprend
+            case 32: //p => met en pause le jeu ou le reprend
                 if(timer_is_on){
                     timer_is_on = false;
+                    myAudio.pause();
                 }
                 else{
                     timer_is_on = true;
+                    myAudio.play();
                     refreshCanvas();
                 }
                 break;
             case 82: //r => recommence le jeu 
+                myAudio.pause();
                 restart();
             break;
         }
