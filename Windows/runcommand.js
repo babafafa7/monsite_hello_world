@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "eventvwr.msc": "Event Viewer",
         "gpedit.msc": "Group Policy Editor",
         "lusrmgr.msc": "Local User and Groups",
+        "secpol.msc": "Local Security Policy"
     };
 
     const Common_Windows_Tools_data = {
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "write": "WordPad",
         "xpsrchvw": "XPS Viewer",
         "winword": "Word",
-        "Word /safe": "Word Safe Mode",
+        "Word /safe": "Word Safe Mode"
     };
 
     const Control_Panel_Commands_data = {
@@ -121,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "lusrmgr.msc": "Local User and Groups",
         "perfmon.msc": "Performance Monitor",
         "rekeywiz": "File Encryption",
+        "secpol.msc": "Local Security Policy"
     };
 
     const System_File_Checker_Utility_data = {
